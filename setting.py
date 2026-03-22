@@ -1,5 +1,6 @@
 import pygame 
 from pygame.locals import *
+import random
 
 
 clock = pygame.time.Clock()
@@ -10,6 +11,11 @@ screen_width = 1060
 screen_height= 700
 screen= pygame.display.set_mode((screen_width,screen_height))
 pygame.display.set_caption("SPACE SHOOTER")
+
+
+
+rows=5
+columns= 7
 
 
 red= (255,0,0)
@@ -31,7 +37,6 @@ def load_clean_image(path, remove_white=True):
 
 bullet_img = pygame.transform.scale(load_clean_image("images/bullet.png"), (50, 50))
 spaceship_img = pygame.transform.scale(load_clean_image("images/spaceship.png"), (150, 70))
-alien_img  = pygame.transform.scale(load_clean_image("images/alien" + str(random.radiant(1 ,5)) + ".png"), (150, 70))
 
 
 
@@ -103,17 +108,30 @@ class Bullets(pygame.sprite.Sprite):
 class Aliens(pygame.sprite.Sprite):
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
-        self.image = bullet_img.copy()
+        alien_img  = pygame.transform.scale(load_clean_image("images/alien" + str(random.randint(1 ,5)) + ".png"), (80, 70))
+        self.image = alien_img.copy()
         self.rect = self.image.get_rect()
         self.rect.midbottom = (x, y)
-
-
-
+    
+    def update(self):
+        pass 
 
 
 
 spaceship_group = pygame.sprite.Group()
 bullet_group= pygame.sprite.Group()
+alien_group = pygame.sprite.Group()
+
+
+def create_aliens():
+    for row in range(rows):
+        for item in range(columns):
+            alien= Aliens(100 + item * 150, 100 + row * 80)
+            alien_group.add(alien)
+
+
+create_aliens()
+
 
 spaceship= Spaceship(int(screen_width / 2),screen_height - 100 , 3)
 spaceship_group.add(spaceship)
@@ -129,13 +147,16 @@ while run:
 
 
     spaceship.update() 
+
     bullet_group.update()
+    alien_group.update()
 
 
 
 
     spaceship_group.draw(screen)
     bullet_group.draw(screen)
+    alien_group.draw(screen)
 
 
 
