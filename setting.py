@@ -28,8 +28,10 @@ def load_clean_image(path, remove_white=True):
                     img.set_at((x1, y1), (0, 0, 0, 0))
     return img
 
+
 bullet_img = pygame.transform.scale(load_clean_image("images/bullet.png"), (50, 50))
 spaceship_img = pygame.transform.scale(load_clean_image("images/spaceship.png"), (150, 70))
+alien_img  = pygame.transform.scale(load_clean_image("images/alien" + str(random.radiant(1 ,5)) + ".png"), (150, 70))
 
 
 
@@ -97,6 +99,18 @@ class Bullets(pygame.sprite.Sprite):
         if self.rect.bottom < 0:
             self.kill()
   
+
+class Aliens(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = bullet_img.copy()
+        self.rect = self.image.get_rect()
+        self.rect.midbottom = (x, y)
+
+
+
+
+
 
 spaceship_group = pygame.sprite.Group()
 bullet_group= pygame.sprite.Group()
