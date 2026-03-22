@@ -15,7 +15,7 @@ pygame.display.set_caption("SPACE SHOOTER")
 
 
 rows=5
-columns= 7
+columns= 5
 
 
 red= (255,0,0)
@@ -92,6 +92,8 @@ class Spaceship(pygame.sprite.Sprite):
 
 #     def update(self):
 #         self.rect.y -= 5
+
+
 class Bullets(pygame.sprite.Sprite):
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
@@ -105,16 +107,55 @@ class Bullets(pygame.sprite.Sprite):
             self.kill()
   
 
+# class Aliens(pygame.sprite.Sprite):
+#     move_direction=1
+#     move_counter=0
+    
+#     def __init__(self, x, y):
+#         pygame.sprite.Sprite.__init__(self)
+#         alien_img  = pygame.transform.scale(load_clean_image("images/alien" + str(random.randint(1 ,5)) + ".png"), (65, 70))
+#         self.image = alien_img.copy()
+#         self.rect = self.image.get_rect()
+#         self.rect.midbottom = (x, y)
+
+#         # self.move_counter = 0 
+#         # self.move_direction = 1 
+    
+#     def update(self):
+#         self.rect.x += Aliens.move_direction
+
+#         if self == list (alien_group)[0]:
+#             Aliens.move_counter += 1
+       
+#        # self.move_counter += 1
+
+#             if Aliens.move_counter >= 200 :
+#                Aliens.move_direction *= -1
+#                Aliens.move_counter = 0
+
 class Aliens(pygame.sprite.Sprite):
+    move_direction = 1
+    should_flip = False 
+
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
-        alien_img  = pygame.transform.scale(load_clean_image("images/alien" + str(random.randint(1 ,5)) + ".png"), (80, 70))
+        alien_img = pygame.transform.scale(
+            load_clean_image("images/alien" + str(random.randint(1, 5)) + ".png"), (65, 70)
+        )
         self.image = alien_img.copy()
         self.rect = self.image.get_rect()
         self.rect.midbottom = (x, y)
-    
+
     def update(self):
-        pass 
+        self.rect.x += Aliens.move_direction
+
+        if self.rect.right >= screen_width or self.rect.left <= 0:
+            Aliens.should_flip = True
+
+        if self == list(alien_group)[-1]:
+            if Aliens.should_flip:
+                Aliens.move_direction *= -1
+                Aliens.should_flip = False     
 
 
 
@@ -123,10 +164,13 @@ bullet_group= pygame.sprite.Group()
 alien_group = pygame.sprite.Group()
 
 
+total_width = (columns - 1) * 130  
+start_x = (screen_width - total_width) // 2
+
 def create_aliens():
     for row in range(rows):
         for item in range(columns):
-            alien= Aliens(100 + item * 150, 100 + row * 80)
+            alien= Aliens(start_x + item * 130, 100 + row * 75)
             alien_group.add(alien)
 
 
