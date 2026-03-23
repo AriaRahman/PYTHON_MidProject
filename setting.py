@@ -16,6 +16,8 @@ pygame.display.set_caption("SPACE SHOOTER")
 
 rows=5
 columns= 5
+alien_cooldown = 1000
+last_alien_shot = pygame.time.get_ticks()
 
 
 red= (255,0,0)
@@ -37,12 +39,13 @@ def load_clean_image(path, remove_white=True):
 
 bullet_img = pygame.transform.scale(load_clean_image("images/bullet.png"), (50, 50))
 spaceship_img = pygame.transform.scale(load_clean_image("images/spaceship.png"), (150, 70))
-
+invader_bullet= pygame.transform.scale(load_clean_image("images/invaderbullet.png"), (35,35))
 
 
 
 def draw_bg():
     screen.blit(game_background,(0,0))
+
 
 
 
@@ -159,9 +162,38 @@ class Aliens(pygame.sprite.Sprite):
 
 
 
+
+class Alien_Bullets(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = invader_bullet.copy()
+        self.rect = self.image.get_rect()
+        self.rect.midbottom = (x, y)
+
+    def update(self):
+        self.rect.y += 4
+        if self.rect.top > screen_height:
+            self.kill()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 spaceship_group = pygame.sprite.Group()
 bullet_group= pygame.sprite.Group()
 alien_group = pygame.sprite.Group()
+alien_bullet_group = pygame.sprite.Group()
 
 
 total_width = (columns - 1) * 130  
@@ -185,6 +217,18 @@ run=True
 while run:
     clock.tick(fps)
     draw_bg()
+
+    time_now = pygame.time.get_ticks()
+
+
+    if time_now - last_alien_shot > alien_cooldown and len(alien_bullet_group) < 5 and len(alien_group) > 0 :
+          attacking_alien = random.choice (alien_group.sprites())
+          alien_bullet = Alien_Bullets (attacking_alien.rect.centerx, attacking_alien.rect.bottom)
+          alien_bullet_group.add(alien_bullet)
+          last_alien_shot = time_now
+
+
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run=False
@@ -194,6 +238,7 @@ while run:
 
     bullet_group.update()
     alien_group.update()
+    alien_bullet_group.update()
 
 
 
@@ -201,6 +246,7 @@ while run:
     spaceship_group.draw(screen)
     bullet_group.draw(screen)
     alien_group.draw(screen)
+    alien_bullet_group.draw(screen)
 
 
 
