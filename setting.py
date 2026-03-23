@@ -39,7 +39,7 @@ def load_clean_image(path, remove_white=True):
 
 bullet_img = pygame.transform.scale(load_clean_image("images/bullet.png"), (40, 40))
 spaceship_img = pygame.transform.scale(load_clean_image("images/spaceship.png"), (150, 70))
-invader_bullet= pygame.transform.scale(load_clean_image("images/invaderbullet.png"), (25,25))
+invader_bullet= pygame.transform.scale(load_clean_image("images/invaderbullet.png"), (20,20))
 
 
 
@@ -63,7 +63,7 @@ class Spaceship(pygame.sprite.Sprite):
  
     def update(self):
         speed = 8
-        cooldown = 100
+        cooldown = 250
         key= pygame.key.get_pressed()
         if key[pygame.K_LEFT] and self.rect.left > 0:
             self.rect.x -= speed
@@ -152,7 +152,7 @@ class Aliens(pygame.sprite.Sprite):
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
         alien_img = pygame.transform.scale(
-            load_clean_image("images/alien" + str(random.randint(1, 5)) + ".png"), (65, 65)
+            load_clean_image("images/alien" + str(random.randint(1, 5)) + ".png"), (60, 60)
         )
         self.image = alien_img.copy()
         self.rect = self.image.get_rect()
