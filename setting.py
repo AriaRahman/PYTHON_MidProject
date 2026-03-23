@@ -37,9 +37,9 @@ def load_clean_image(path, remove_white=True):
     return img
 
 
-bullet_img = pygame.transform.scale(load_clean_image("images/bullet.png"), (50, 50))
+bullet_img = pygame.transform.scale(load_clean_image("images/bullet.png"), (40, 40))
 spaceship_img = pygame.transform.scale(load_clean_image("images/spaceship.png"), (150, 70))
-invader_bullet= pygame.transform.scale(load_clean_image("images/invaderbullet.png"), (35,35))
+invader_bullet= pygame.transform.scale(load_clean_image("images/invaderbullet.png"), (25,25))
 
 
 
@@ -77,6 +77,12 @@ class Spaceship(pygame.sprite.Sprite):
             bullet_group.add(bullet)
             self.last_shot= time_now
 
+        
+
+        self.mask = pygame.mask.from_surface(self.image)
+
+
+
 
 
 
@@ -108,6 +114,9 @@ class Bullets(pygame.sprite.Sprite):
         self.rect.y -= 11
         if self.rect.bottom < 0:
             self.kill()
+        if pygame.sprite.spritecollide(self, alien_group, True):
+            self.kill()
+           
   
 
 # class Aliens(pygame.sprite.Sprite):
@@ -143,7 +152,7 @@ class Aliens(pygame.sprite.Sprite):
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
         alien_img = pygame.transform.scale(
-            load_clean_image("images/alien" + str(random.randint(1, 5)) + ".png"), (65, 70)
+            load_clean_image("images/alien" + str(random.randint(1, 5)) + ".png"), (65, 65)
         )
         self.image = alien_img.copy()
         self.rect = self.image.get_rect()
@@ -174,7 +183,10 @@ class Alien_Bullets(pygame.sprite.Sprite):
         self.rect.y += 4
         if self.rect.top > screen_height:
             self.kill()
-
+        
+        if pygame.sprite.spritecollide(self, spaceship_group, False, pygame.sprite.collide_mask):
+            self.kill()
+            spaceship.health_remaining -= 1
 
 
 
