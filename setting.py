@@ -3,7 +3,7 @@ from pygame.locals import *
 from pygame import mixer
 import random
 
- 
+pygame.init()
 pygame.mixer.pre_init(44100, -16, 2, 512)
 mixer.init()
 
@@ -17,6 +17,10 @@ screen_height= 700
 screen= pygame.display.set_mode((screen_width,screen_height))
 pygame.display.set_caption("SPACE SHOOTER")
 
+
+font30= pygame.font.SysFont('Constantia', 30)
+font40= pygame.font.SysFont('Constantia', 40)
+
 explosion_fx = pygame.mixer.Sound("images/explosion.wav")
 explosion_fx.set_volume(0.25)
 
@@ -28,14 +32,18 @@ laser_fx.set_volume(0.25)
  
 
 
-rows=5
+rows=4
 columns= 5
 alien_cooldown = 1000
 last_alien_shot = pygame.time.get_ticks()
+countdown= 3
+last_count= pygame.time.get_ticks()
 
 
 red= (255,0,0)
 green= (0,255,0)
+white= (255,255,255)
+
 game_background=pygame.image.load("images/space.jpg")
 
 
@@ -60,6 +68,11 @@ invader_bullet= pygame.transform.scale(load_clean_image("images/invaderbullet.pn
 def draw_bg():
     screen.blit(game_background,(0,0))
 
+
+
+def draw_text(text, font, text_col, x, y):
+    img = font.render(text, True, text_col)
+    screen.blit(img, (x,y))
 
 
 
@@ -288,10 +301,13 @@ while run:
     clock.tick(fps)
     draw_bg()
 
-    time_now = pygame.time.get_ticks()
+    if countdown == 0 :
+        
+
+      time_now = pygame.time.get_ticks()
 
 
-    if time_now - last_alien_shot > alien_cooldown and len(alien_bullet_group) < 5 and len(alien_group) > 0 :
+      if time_now - last_alien_shot > alien_cooldown and len(alien_bullet_group) < 5 and len(alien_group) > 0 :
           attacking_alien = random.choice (alien_group.sprites())
           alien_bullet = Alien_Bullets (attacking_alien.rect.centerx, attacking_alien.rect.bottom)
           alien_bullet_group.add(alien_bullet)
@@ -299,16 +315,25 @@ while run:
 
 
 
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            run=False
 
 
-    spaceship.update() 
+      spaceship.update() 
 
-    bullet_group.update()
-    alien_group.update()
-    alien_bullet_group.update()
+      bullet_group.update()
+      alien_group.update()
+      alien_bullet_group.update()
+
+    if countdown> 0:
+        draw_text('GET READY!!!', font40, white, int(screen_width/2 - 110), int(screen_height/2 + 50))
+        draw_text(str(countdown), font40, white, int(screen_width/2 - 10), int(screen_height/2 + 100))
+        count_timer = pygame.time.get_ticks()
+        if count_timer - last_count > 1000:
+            countdown -= 1
+            last_count= count_timer
+    
+    
+    
+    
     explosion_group.update()
 
 
@@ -320,6 +345,11 @@ while run:
     alien_bullet_group.draw(screen)
     explosion_group.draw(screen)
 
+
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            run=False
 
 
     pygame.display.update()
