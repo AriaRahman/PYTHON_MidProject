@@ -180,6 +180,35 @@ class Explosion(pygame.sprite.Sprite):
             self.kill()
 
 
+class MenuButton:
+ 
+    def __init__(self, cx, cy, w, h, label, enabled=True):
+        self.rect    = pygame.Rect(0, 0, w, h)
+        self.rect.center = (cx, cy)
+        self.label   = label
+        self.enabled = enabled
+ 
+    def handle_event(self, event):
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            if self.enabled and self.rect.collidepoint(event.pos):
+                return True
+        return False
+ 
+    def draw(self, surf):
+        hovered = self.rect.collidepoint(pygame.mouse.get_pos()) and self.enabled
+ 
+        bg = (0, 100, 200) if hovered else (0, 60, 130)
+        fg = settings.white if self.enabled else (120, 120, 120)
+ 
+        pygame.draw.rect(surf, bg, self.rect)
+        pygame.draw.rect(surf, settings.white, self.rect, 2)
+ 
+        label_surf = settings.font30.render(self.label, True, fg)
+        surf.blit(label_surf, label_surf.get_rect(center=self.rect.center))
+
+
+
+
 
 spaceship_group = pygame.sprite.Group()
 bullet_group= pygame.sprite.Group()

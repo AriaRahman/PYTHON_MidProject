@@ -1,5 +1,13 @@
 from __future__ import annotations
-from game import rungame
+import pygame
+from game import rungame, run_menu, show_instructions
 
 if __name__ == "__main__":
-    rungame()
+    if run_menu():
+         if show_instructions():
+             rungame()
+         else:
+              pygame.quit()
+    else:
+         pygame.quit()
+    

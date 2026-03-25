@@ -30,3 +30,5 @@ def draw_text(text : str , font: pygame.font.Font, text_col: tuple , x : int , y
 
     img = font.render(text, True, text_col)
     settings.screen.blit(img, (x,y))
+
+
