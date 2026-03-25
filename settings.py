@@ -51,4 +51,5 @@ countdown= 3
 game_over = 0 
 last_count= pygame.time.get_ticks()
 last_alien_shot = pygame.time.get_ticks()
+time_now = pygame.time.get_ticks()
 
