@@ -50,12 +50,12 @@ class Spaceship(pygame.sprite.Sprite):
 
         self.mask = pygame.mask.from_surface(self.image)
 
-        pygame.draw.rect(screen, red, (self.rect.x , (self.rect.bottom + 10), self.rect.width, 15))
+        pygame.draw.rect(settings.screen, settings.red, (self.rect.x , (self.rect.bottom + 10), self.rect.width, 15))
        
        
         if self.health_remaining > 0 :
                  
-                 pygame.draw.rect(screen,green , 
+                 pygame.draw.rect(settings.screen,settings.green , 
                                   (self.rect.x , (self.rect.bottom + 10), 
                                    int(self.rect.width * (self.health_remaining/ self.health_start)), 15))
        
