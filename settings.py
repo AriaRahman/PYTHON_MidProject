@@ -1,6 +1,7 @@
 from __future__ import annotations
 import pygame 
 from pygame import mixer
+from utils import load_clean_image
 
 
 
@@ -46,10 +47,21 @@ columns= 5
 
 
 
+
+game_background = pygame.image.load("images/space.jpg")
+
+bullet_img = pygame.transform.scale(
+    load_clean_image("images/bullet.png"), (40, 40))
+spaceship_img = pygame.transform.scale(
+    load_clean_image("images/spaceship.png"), (150, 70))
+invader_bullet= pygame.transform.scale(
+    load_clean_image("images/invaderbullet.png"), (20,20))
+
+
+
 alien_cooldown = 1000
 countdown= 3
 game_over = 0 
 last_count= pygame.time.get_ticks()
 last_alien_shot = pygame.time.get_ticks()
 time_now = pygame.time.get_ticks()
-

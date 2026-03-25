@@ -22,12 +22,6 @@ def load_clean_image(path: str , remove_white: bool = True) -> pygame.Surface:
 
 
 
-bullet_img = pygame.transform.scale(
-    load_clean_image("images/bullet.png"), (40, 40))
-spaceship_img = pygame.transform.scale(
-    load_clean_image("images/spaceship.png"), (150, 70))
-invader_bullet= pygame.transform.scale(
-    load_clean_image("images/invaderbullet.png"), (20,20))
 
 
 
