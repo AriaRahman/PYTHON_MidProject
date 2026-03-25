@@ -3,15 +3,12 @@ from __future__ import annotations
 import random
 import pygame
 
-import settings
+import settings 
 
 from utils import (
     load_clean_image,
-    bullet_img,
-    spaceship_img,
-    invader_bullet,
+    
 )
-
 
 
 class Spaceship(pygame.sprite.Sprite):
@@ -204,7 +201,6 @@ def create_aliens():
             alien_group.add(alien)
 
 
-create_aliens()
 
 
 spaceship: Spaceship | None =   None

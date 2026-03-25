@@ -4,13 +4,11 @@ import settings
 
 
 
-game_background=pygame.image.load("images/space.jpg")
-
-
 
 
 def load_clean_image(path: str , remove_white: bool = True) -> pygame.Surface:
-    img = pygame.image.load(path).convert_alpha()
+    img = pygame.image.load(path)
+    img = img.convert_alpha() if pygame.display.get_surface() else img
     if remove_white:
         width, height = img.get_size()
         for x1 in range(width):
