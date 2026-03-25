@@ -38,6 +38,7 @@ game_over = 0
 
 
 class Spaceship(pygame.sprite.Sprite):
+    
     def __init__(self, x, y, health):
         pygame.sprite.Sprite.__init__(self)
         self.image = spaceship_img.copy()   
