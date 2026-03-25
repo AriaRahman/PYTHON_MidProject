@@ -23,35 +23,17 @@ game_over = 0
 
 
 
-game_background=pygame.image.load("images/space.jpg")
-
-
-def load_clean_image(path, remove_white=True):
-    img = pygame.image.load(path).convert_alpha()
-    if remove_white:
-        width, height = img.get_size()
-        for x1 in range(width):
-            for y1 in range(height):
-                r, g, b, a = img.get_at((x1, y1))
-                if r > 200 and g > 200 and b > 200:
-                    img.set_at((x1, y1), (0, 0, 0, 0))
-    return img
-
-
-bullet_img = pygame.transform.scale(load_clean_image("images/bullet.png"), (40, 40))
-spaceship_img = pygame.transform.scale(load_clean_image("images/spaceship.png"), (150, 70))
-invader_bullet= pygame.transform.scale(load_clean_image("images/invaderbullet.png"), (20,20))
 
 
 
-def draw_bg():
-    screen.blit(game_background,(0,0))
 
 
 
-def draw_text(text, font, text_col, x, y):
-    img = font.render(text, True, text_col)
-    screen.blit(img, (x,y))
+
+
+
+
+
 
 
 
