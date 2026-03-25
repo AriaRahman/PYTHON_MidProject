@@ -24,7 +24,7 @@ def load_clean_image(path: str , remove_white: bool = True) -> pygame.Surface:
 
 
 def draw_bg() -> None:
-    settings.screen.blit(game_background,(0,0))
+    settings.screen.blit(settings.game_background,(0,0))
 
 def draw_text(text : str , font: pygame.font.Font, text_col: tuple , x : int , y: int ) -> None:
 

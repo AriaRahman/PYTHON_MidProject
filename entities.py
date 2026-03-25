@@ -5,17 +5,14 @@ import pygame
 
 import settings 
 
-from utils import (
-    load_clean_image,
-    
-)
+from utils import load_clean_image
 
 
 class Spaceship(pygame.sprite.Sprite):
     
     def __init__(self, x, y, health):
         pygame.sprite.Sprite.__init__(self)
-        self.image = spaceship_img.copy()   
+        self.image = settings.spaceship_img.copy()   
         self.rect = self.image.get_rect()
         self.rect.midbottom = (x, y)
         self.health_start = health
@@ -71,7 +68,7 @@ class Spaceship(pygame.sprite.Sprite):
 class Bullets(pygame.sprite.Sprite):
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
-        self.image = bullet_img.copy()
+        self.image = settings.bullet_img.copy()
         self.rect = self.image.get_rect()
         self.rect.midbottom = (x, y)
 
@@ -122,7 +119,7 @@ class Alien_Bullets(pygame.sprite.Sprite):
 
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
-        self.image = invader_bullet.copy()
+        self.image = settings.invader_bullet.copy()
         self.rect = self.image.get_rect()
         self.rect.midbottom = (x, y)
 
