@@ -23,9 +23,9 @@ cy = settings.screen_height // 2
 def run_menu() -> bool:
    
  
-    btn_player = MenuButton(cx, cy - 80, 300, 50, "PLAYER NAME",  enabled=False)
-    btn_start  = MenuButton(cx, cy,      300, 50, "START GAME",   enabled=True)
-    btn_scores = MenuButton(cx, cy + 80, 300, 50, "HIGH SCORES",  enabled=False)
+    btn_player = MenuButton(cx, cy - 80, 300, 50, "PLAYER NAME",enabled=False)
+    btn_start  = MenuButton(cx, cy,300, 50, "START GAME", enabled=True)
+    btn_scores = MenuButton(cx, cy + 80, 300, 50, "HIGH SCORES",enabled=False)
  
     buttons = [btn_player, btn_start, btn_scores]
  
@@ -64,12 +64,17 @@ def show_instructions() -> bool:
  
         draw_bg()
  
-        draw_text('HOW TO PLAY',         settings.font40, settings.white, cx - 110, cy - 160)
-        draw_text('< >   Move left / right', settings.font30, settings.white, cx - 160, cy - 60)
-        draw_text('SPACE   Shoot',           settings.font30, settings.white, cx - 160, cy)
-        draw_text('Press ENTER to start',    settings.font30, settings.white, cx - 160, cy + 100)
- 
+        line= [
+            (settings.font40, 'HOW TO PLAY',              cy - 160),
+            (settings.font30, 'USE < > TO MOVE LEFT/RIGHT',              cy - 60),
+            (settings.font30, 'USE SPACE TO SHOOT',              cy),
+            (settings.font30, 'PRESS ENTER TO START',              cy + 100)]
+        for font, text , y in line:
+            rules= font.render(text, True, settings.white)
+            settings.screen.blit(rules,(cx - rules.get_width()//2,y))
+
         pygame.display.update()
+        
  
 
 
