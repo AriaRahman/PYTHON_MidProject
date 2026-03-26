@@ -127,7 +127,7 @@ class Aliens(pygame.sprite.Sprite):
         self.image = alien_img.copy()
         self.rect = self.image.get_rect()
         self.rect.midbottom = (x, y)
-        self.health = 2
+        self.health = 3
 
     def update(self):
         self.rect.x += Aliens.move_direction
