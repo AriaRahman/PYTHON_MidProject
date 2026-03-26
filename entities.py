@@ -1,3 +1,18 @@
+
+"""
+Defines all game objects as Pygame sprites:
+- Spaceship  : player-controlled ship (movement, shooting, health)
+- Bullets    : player projectiles
+- Aliens     : shared formation movement)
+- Alien_Bullets : enemy projectiles
+- Explosion  : animated sprite-sheet effect
+- MenuButton : reusable UI button
+
+"""
+
+
+
+
 from __future__ import annotations
 
 import random

@@ -1,8 +1,14 @@
+
+"""
+ helper functions used across the project:
+- load_clean_image : loads a PNG and removes transparent backgrounds
+- draw_bg          : blits the space background 
+- draw_text        : renders a text string 
+"""
+
 from __future__ import annotations
 import pygame
 import settings
-
-
 
 
 
@@ -17,10 +23,6 @@ def load_clean_image(path: str , remove_white: bool = True) -> pygame.Surface:
                 if r > 200 and g > 200 and b > 200:
                     img.set_at((x1, y1), (0, 0, 0, 0))
     return img
-
-
-
-
 
 
 def draw_bg() -> None:

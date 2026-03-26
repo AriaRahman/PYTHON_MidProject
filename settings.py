@@ -1,3 +1,17 @@
+  
+"""
+Global configuration and shared state for the game.
+
+Initializes Pygame, display, fonts, sounds, and colors.
+
+Holds mutable game state variables
+        (score, countdown,game_over, player_name)  
+
+"""
+
+
+
+
 from __future__ import annotations
 import pygame 
 from pygame import mixer
