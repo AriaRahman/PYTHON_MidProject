@@ -44,6 +44,7 @@ bgn = (200, 170, 0)
 fg = (0, 0, 0)
 enter_color=(0, 160, 0)
 errcolor= (255, 80, 80)
+quit_color = (180, 0, 0)
 
 
 

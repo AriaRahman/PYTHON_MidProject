@@ -143,7 +143,8 @@ def show_instructions() -> bool:
              settings.screen.blit(err,err.get_rect(centerx = cx , centery = cy +55))
 
         
-        pygame.draw.line(settings.screen, settings.white,(cx - 250, cy + 80), (cx + 250, cy + 80), 1)
+        pygame.draw.line(settings.screen, settings.white,
+                         (cx - 250, cy + 80), (cx + 250, cy + 80), 1)
 
 
         lines= [
@@ -166,7 +167,20 @@ def rungame() -> None:
     create_aliens()
     spaceship= create_spaceship()
 
+    settings.game_over = 0
+    settings.countdown = 3
+    settings.last_count = pygame.time.get_ticks()
+    settings.last_alien_shot = pygame.time.get_ticks()
 
+
+    quit_btn = MenuButton(settings.screen_width - 70 , 30 , 110, 40,
+                          "QUIT", enabled= True, color = settings.quit_color)
+    
+
+    restart_btn = MenuButton(int(settings.screen_width / 2), 
+                             int(settings.screen_height / 2 + 120),
+                             200, 50, "RESTART", enabled=True)
+    
     run= True
 
     while run:
@@ -210,6 +224,8 @@ def rungame() -> None:
                           draw_text('YOU WIN', settings.font40, settings.white, 
                             int(settings.screen_width/2 - 100),
                             int(settings.screen_height/2 + 50))
+                  
+                  restart_btn.draw(settings.screen) 
 
     
           
@@ -243,12 +259,31 @@ def rungame() -> None:
         alien_bullet_group.draw(settings.screen)
         explosion_group.draw(settings.screen)
 
+        quit_btn.draw(settings.screen)
+
 
         for event in pygame.event.get():
            if event.type == pygame.QUIT:
-                 run=False
-
+                 return False
+            
+           if quit_btn.handle_event(event):
+                spaceship_group.empty()
+                bullet_group.empty()
+                alien_group.empty()
+                alien_bullet_group.empty()
+                explosion_group.empty()
+                return False
+           
+           if settings.game_over != 0 and restart_btn.handle_event(event):
+                
+                spaceship_group.empty()
+                bullet_group.empty()
+                alien_group.empty()
+                alien_bullet_group.empty()
+                explosion_group.empty()
+                return True   
+           
 
         pygame.display.update()
 
-    pygame.quit() 
+    return False

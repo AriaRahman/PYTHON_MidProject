@@ -198,11 +198,13 @@ class MenuButton:
     def draw(self, surf):
         hovered = self.rect.collidepoint(pygame.mouse.get_pos()) and self.enabled
  
-        settings.bg if hovered else settings.bgn
+        base= self.color if self.color else settings.bg 
+        r,g,b = base
+        bg = (min(r + 40, 255), min(g + 40, 255), 
+              min(b + 40, 255)) if hovered else base
+       
 
-        settings.fg 
-
-        pygame.draw.rect(surf, settings.bg, self.rect)
+        pygame.draw.rect(surf, bg, self.rect)
         pygame.draw.rect(surf, settings.fg, self.rect, 2)
  
         label_surf = settings.font30.render(self.label, True, settings.fg)
