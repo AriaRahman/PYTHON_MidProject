@@ -182,11 +182,12 @@ class Explosion(pygame.sprite.Sprite):
 
 class MenuButton:
  
-    def __init__(self, cx, cy, w, h, label, enabled=True):
+    def __init__(self, cx, cy, w, h, label, enabled=True, color = None):
         self.rect    = pygame.Rect(0, 0, w, h)
         self.rect.center = (cx, cy)
         self.label   = label
         self.enabled = enabled
+        self.color = color
  
     def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
@@ -197,13 +198,14 @@ class MenuButton:
     def draw(self, surf):
         hovered = self.rect.collidepoint(pygame.mouse.get_pos()) and self.enabled
  
-        bg = (0, 100, 200) if hovered else (0, 60, 130)
-        fg = settings.white if self.enabled else (120, 120, 120)
+        settings.bg if hovered else settings.bgn
+
+        settings.fg 
+
+        pygame.draw.rect(surf, settings.bg, self.rect)
+        pygame.draw.rect(surf, settings.fg, self.rect, 2)
  
-        pygame.draw.rect(surf, bg, self.rect)
-        pygame.draw.rect(surf, settings.white, self.rect, 2)
- 
-        label_surf = settings.font30.render(self.label, True, fg)
+        label_surf = settings.font30.render(self.label, True, settings.fg)
         surf.blit(label_surf, label_surf.get_rect(center=self.rect.center))
 
 

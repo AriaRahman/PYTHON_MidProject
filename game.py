@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import random
+import os
 import pygame
 import settings
 from utils import draw_bg, draw_text
@@ -16,18 +17,51 @@ from entities import (
     create_aliens,
     create_spaceship,
 )
+
+NAME_FILE = "Playername.txt"
+
 cx = settings.screen_width  // 2
 cy = settings.screen_height // 2
 
 
+def loadnames() -> list[str]:
+     if not os.path.exists(NAME_FILE):
+          return[]
+     with open(NAME_FILE,'r') as f:
+          return [line.strip().lower() for line in f if line.strip()]
+
+
+def savenames(name: str) -> None:
+     with open(NAME_FILE, 'a') as f:
+          f.write(name.strip()+ "\n")
+
+
+def validate_save(name_text: str) -> str:
+    name = name_text.strip()
+
+    if len(name) == 0:
+        return "Name cannot be empty!"
+    
+    if not name.replace(" ", "").isalpha():
+
+        return "Letters only please!"
+    
+    if name.lower() in loadnames():
+
+        return "Name already taken!"
+    
+    savenames(name)
+    settings.player_name = name
+    return ""
+
+
 def run_menu() -> bool:
-   
- 
-    btn_player = MenuButton(cx, cy - 80, 300, 50, "PLAYER NAME",enabled=False)
+
+
     btn_start  = MenuButton(cx, cy,300, 50, "START GAME", enabled=True)
     btn_scores = MenuButton(cx, cy + 80, 300, 50, "HIGH SCORES",enabled=False)
  
-    buttons = [btn_player, btn_start, btn_scores]
+    buttons = [btn_start, btn_scores]
  
     while True:
         settings.clock.tick(settings.fps)
@@ -52,29 +86,77 @@ def run_menu() -> bool:
 
 
 def show_instructions() -> bool:
- 
+
+    input_box = pygame.Rect(0,0,360,50)
+    input_box.center=(cx,cy-80)
+
+    enter_btn = MenuButton(cx, cy, 200, 45, "ENTER", enabled=True,color= settings.enter_color)
+
+    name_txt=""
+    error_txt=""
+
     while True:
         settings.clock.tick(settings.fps)
  
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return False
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
-                return True
+            
+        #     if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+        #         return True
+            if event.type == pygame.KEYDOWN:
+                 
+                if event.key == pygame.K_BACKSPACE:
+                    name_txt = name_txt[:-1]
+                    error_txt = ""
+                elif event.key == pygame.K_RETURN:
+                    error_txt = validate_save (name_txt)
+
+                    if error_txt == "":
+                        return True
+                    
+                elif len(name_txt) < 16:
+                    if event.unicode.isprintable() and event.unicode != " ":
+                        name_txt += event.unicode
+                        error_txt = ""
+ 
+            if enter_btn.handle_event(event):
+                error_txt = validate_save(name_txt)
+                if error_txt == "":
+                    return True
  
         draw_bg()
- 
-        line= [
-            (settings.font40, 'HOW TO PLAY',              cy - 160),
-            (settings.font30, 'USE < > TO MOVE LEFT/RIGHT',              cy - 60),
-            (settings.font30, 'USE SPACE TO SHOOT',              cy),
-            (settings.font30, 'PRESS ENTER TO START',              cy + 100)]
-        for font, text , y in line:
+
+        label = settings.font30.render("PLAYER NAME", True, settings.white)
+        settings.screen.blit(label, label.get_rect(centerx=cx, centery=cy - 140))
+       
+       
+        pygame.draw.rect(settings.screen, settings.white, input_box)
+        pygame.draw.rect(settings.screen, (0, 0, 0), input_box, 2)
+        name_surf = settings.font30.render(name_txt, True, (0, 0, 0))
+        settings.screen.blit(name_surf, name_surf.get_rect(center=input_box.center))
+
+        enter_btn.draw(settings.screen)
+
+        if error_txt:
+             err = settings.font30.render(error_txt,True, settings.errcolor)
+             settings.screen.blit(err,err.get_rect(centerx = cx , centery = cy +55))
+
+        
+        pygame.draw.line(settings.screen, settings.white,(cx - 250, cy + 80), (cx + 250, cy + 80), 1)
+
+
+        lines= [
+            (settings.font40, 'HOW TO PLAY',cy + 120),
+            (settings.font30, 'USE < > TO MOVE LEFT/RIGHT', cy + 190),
+            (settings.font30, 'USE SPACE TO SHOOT', cy+240),]
+
+        for font, text , y in lines:
             rules= font.render(text, True, settings.white)
             settings.screen.blit(rules,(cx - rules.get_width()//2,y))
 
         pygame.display.update()
-        
+
  
 
 

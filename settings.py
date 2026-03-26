@@ -39,11 +39,17 @@ laser_fx.set_volume(0.25)
 red= (255,0,0)
 green= (0,255,0)
 white= (255,255,255)
+bg = (255, 220, 0)
+bgn = (200, 170, 0)
+fg = (0, 0, 0)
+enter_color=(0, 160, 0)
+errcolor= (255, 80, 80)
+
 
 
 
 rows=4
-columns= 5
+columns= 6
 
 
 
@@ -65,3 +71,5 @@ game_over = 0
 last_count= pygame.time.get_ticks()
 last_alien_shot = pygame.time.get_ticks()
 time_now = pygame.time.get_ticks()
+
+player_name = ""
