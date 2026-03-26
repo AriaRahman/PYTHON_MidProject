@@ -3,22 +3,22 @@
 
 <h2>Deliverables</h2>
 
-✅ Spaceship moves horizontally and shoots bullets upward to destroy alien invaders
+- Spaceship moves horizontally and shoots bullets upward to destroy alien invaders
 <br>
 
-✅ Aliens move in a grid formation and fire bullets randomly at the player
+- Aliens move in a grid formation and fire bullets randomly at the player
 <br>
 
-✅ Player has a visible health bar; losing all health triggers Game Over
+- Player has a visible health bar; losing all health triggers Game Over
 <br>
 
-✅ Scores are saved per player in a CSV file
+- Scores are saved per player in a CSV file
 <br>
 
-✅ A High Scores screen displays the Top 5 players ranked by score [not implemented yet]
+- A High Scores screen displays the Top 5 players ranked by score [not implemented yet]
 <br>
 
-✅ The project is modular with separate files for entities, game logic, settings, and utilities
+- The project is modular with separate files for entities, game logic, settings, and utilities
 
 
 <h2> Architectural Design Decisions</h2>
@@ -35,7 +35,7 @@ game.py — Game manager; handles all screens (menu, name registration, game loo
 utils.py — Stateless helper module; image loading with background removal, background drawing, and text rendering
 <br>
 
-main.py — Entry point; drives the top-level flow: Menu → Registration → Game Loop → repeat
+main.py — Entry point; drives the top-level flow: Menu → enter → Game Loop → repeat
 
 
 <h2>OOP Concepts and how those Applied</h2>
