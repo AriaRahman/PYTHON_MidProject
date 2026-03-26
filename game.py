@@ -43,22 +43,31 @@ def getplayer() -> list[str]:
     return [p["name"].lower() for p in loadplayers()]
  
  
+# def save_score(name: str, score: int) -> None:
+#     players = loadplayers()
+#     for p in players:
+#         if p["name"].lower() == name.lower():
+#                 # if score > p["score"]:
+#                 p["score"] = score
+#                 saveplayers(players)
+#                 return
+
 def save_score(name: str, score: int) -> None:
     players = loadplayers()
     for p in players:
         if p["name"].lower() == name.lower():
-            # if score > p["score"]:
-                p["score"] = score
-                saveplayers(players)
-                return
-
-
+            p["score"] = score
+            saveplayers(players)
+            return
 
 def validate_save(name_text: str) -> str:
     name = name_text.strip()
 
     if len(name) == 0:
         return "Name cannot be empty!"
+    
+    if len(name) < 2:
+        return "Name must be at least 2 characters!"
     
     if not name.replace(" ", "").isalpha():
 
@@ -305,6 +314,7 @@ def rungame() -> None:
                  return False
             
            if quit_btn.handle_event(event):
+                clear_save()
                 spaceship_group.empty()
                 bullet_group.empty()
                 alien_group.empty()
@@ -314,6 +324,8 @@ def rungame() -> None:
            
            if settings.game_over != 0 and restart_btn.handle_event(event):
                 
+
+                clear_save()
                 spaceship_group.empty()
                 bullet_group.empty()
                 alien_group.empty()
