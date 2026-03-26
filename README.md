@@ -1,7 +1,7 @@
-🚀 Space Shooter
-A classic Space Invaders-style game built with Python and Pygame, featuring player registration and persistent score tracking.
+# Space Shooter
+### A Space Invaders game built with Python, featuring player and score tracking.
 
-------Deliverables------
+###------Deliverables------
 
 Spaceship moves horizontally and shoots bullets upward to destroy alien invaders.
 Aliens move in a grid formation and fire bullets randomly at the player.
@@ -11,7 +11,7 @@ A High Scores screen displays the Top 5 players ranked by score.
 The project is modular with separate files for entities, game logic, settings, and utilities.
 
 
-------Architectural Design Decisions------
+###------Architectural Design Decisions------
 
 settings.py is the global config module — holds all constants, shared assets, and mutable game state (score, countdown, player_name).
 entities.py is the actor module — defines all sprite classes (Spaceship, Aliens, Bullets, Alien_Bullets, Explosion, MenuButton) and all sprite groups.
@@ -20,7 +20,7 @@ utils.py is a stateless helper module — image loading with background removal,
 main.py is the entry point — drives the top-level flow: Menu → Registration → Game Loop → repeat.
 
 
-------OOP Concepts and How They Are Applied------
+###------OOP Concepts and How They Are Applied------
 
 Encapsulation: Spaceship manages its own health, draws its own health bar.
 Inheritance: All game entities inherit from pygame.sprite.Sprite, gaining group management and collision detection.
