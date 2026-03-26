@@ -1,7 +1,7 @@
 <h1 align="center">Space Shooter Game</h1>
 <p align="center">A classic Space Invaders  game built with <strong>Python & Pygame</strong>, featuring player entry and score tracking.</p>
 
-Deliverables
+<h2>Deliverables</h2>
 
 ✅ Spaceship moves horizontally and shoots bullets upward to destroy alien invaders
 <br>
@@ -21,7 +21,7 @@ Deliverables
 ✅ The project is modular with separate files for entities, game logic, settings, and utilities
 
 
-<h2>🏗 Architectural Design Decisions</h2>
+<h2> Architectural Design Decisions</h2>
 
 settings.py — Global config module; holds all constants, shared assets, and mutable game state (score, countdown, player_name)
 <br>
@@ -38,7 +38,7 @@ utils.py — Stateless helper module; image loading with background removal, bac
 main.py — Entry point; drives the top-level flow: Menu → Registration → Game Loop → repeat
 
 
-<h2>🧠 OOP Concepts and How They Are Applied</h2>
+<h2>OOP Concepts and how those Applied</h2>
 
 Encapsulation: Spaceship manages its own health and draws its own health bar 
 <br>
