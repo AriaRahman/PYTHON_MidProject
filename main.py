@@ -1,3 +1,16 @@
+  
+"""
+
+Entry point of the game.
+
+Main Menu → Player → Game Loop → repeat.
+
+
+"""
+
+
+
+
 from __future__ import annotations
 import pygame
 from game import rungame, run_menu, show_instructions
