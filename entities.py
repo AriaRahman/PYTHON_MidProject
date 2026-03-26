@@ -10,9 +10,6 @@ Defines all game objects as Pygame sprites:
 
 """
 
-
-
-
 from __future__ import annotations
 
 import random
@@ -91,13 +88,29 @@ class Bullets(pygame.sprite.Sprite):
         self.rect.y -= 11
         if self.rect.bottom < 0:
             self.kill()
-        if pygame.sprite.spritecollide(self, alien_group, True):
-            self.kill()
-            settings.score +=10
-            settings.explosion_fx.play()
-            explosion= Explosion (self.rect.centerx, self.rect.centery, 2)
-            explosion_group.add(explosion)
-
+        # if pygame.sprite.spritecollide(self, alien_group, True):
+        #     self.kill()
+        #     settings.score +=10
+        #     settings.explosion_fx.play()
+        #     explosion= Explosion (self.rect.centerx, self.rect.centery, 2)
+        #     explosion_group.add(explosion)
+        hits = pygame.sprite.spritecollide(self, alien_group, False)
+        if hits:
+             #self.kill()
+        
+             alien = hits[0] 
+             alien.health -= 1
+             self.kill()
+             if alien.health <= 0:
+                  
+                  alien.kill()
+                  settings.score += 10
+                  settings.explosion_fx.play()
+                  explosion = Explosion(self.rect.centerx, self.rect.centery, 2)
+                  explosion_group.add(explosion)
+             else:
+         
+                  alien.image.set_alpha(130)
 
 
 
@@ -114,6 +127,7 @@ class Aliens(pygame.sprite.Sprite):
         self.image = alien_img.copy()
         self.rect = self.image.get_rect()
         self.rect.midbottom = (x, y)
+        self.health = 2
 
     def update(self):
         self.rect.x += Aliens.move_direction

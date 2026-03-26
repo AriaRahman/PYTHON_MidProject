@@ -228,7 +228,7 @@ def rungame() -> None:
         if settings.countdown == 0 : 
 
    
-             if settings.time_now - settings.last_alien_shot > settings.alien_cooldown and len(alien_bullet_group) < 5 and len(alien_group) > 0 :
+             if settings.time_now - settings.last_alien_shot > settings.alien_cooldown and len(alien_bullet_group) < 10 and len(alien_group) > 0 :
         
                 attacking_alien = random.choice (alien_group.sprites())
                 alien_bullet = Alien_Bullets (attacking_alien.rect.centerx, 

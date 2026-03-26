@@ -80,7 +80,7 @@ invader_bullet= pygame.transform.scale(
 
 
 
-alien_cooldown = 500
+alien_cooldown = 150 
 countdown= 3
 game_over = 0 
 score= 0
