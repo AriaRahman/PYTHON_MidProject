@@ -66,9 +66,10 @@ invader_bullet= pygame.transform.scale(
 
 
 
-alien_cooldown = 1000
+alien_cooldown = 500
 countdown= 3
 game_over = 0 
+score= 0
 last_count= pygame.time.get_ticks()
 last_alien_shot = pygame.time.get_ticks()
 time_now = pygame.time.get_ticks()

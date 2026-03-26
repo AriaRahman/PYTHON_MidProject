@@ -22,7 +22,7 @@ class Spaceship(pygame.sprite.Sprite):
 
  
     def update(self):
-        speed = 8
+        speed = 3
         cooldown = 250
         game_over= 0
 
@@ -78,6 +78,7 @@ class Bullets(pygame.sprite.Sprite):
             self.kill()
         if pygame.sprite.spritecollide(self, alien_group, True):
             self.kill()
+            settings.score +=10
             settings.explosion_fx.play()
             explosion= Explosion (self.rect.centerx, self.rect.centery, 2)
             explosion_group.add(explosion)

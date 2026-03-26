@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import random
 import os
+import csv
 import pygame
 import settings
 from utils import draw_bg, draw_text
@@ -18,22 +19,39 @@ from entities import (
     create_spaceship,
 )
 
-NAME_FILE = "Playername.txt"
+PLAYER_FILE = "Players.csv"
 
 cx = settings.screen_width  // 2
 cy = settings.screen_height // 2
 
 
-def loadnames() -> list[str]:
-     if not os.path.exists(NAME_FILE):
+def loadplayers() -> list[str]:
+     if not os.path.exists(PLAYER_FILE):
           return[]
-     with open(NAME_FILE,'r') as f:
-          return [line.strip().lower() for line in f if line.strip()]
+     with open(PLAYER_FILE,'r', newline="") as f:
+          reader = csv.DictReader(f)
+          return [{"name": row["name"], "score": int(row["score"])} for row in reader]
+
+def saveplayers(players: list[dict]) -> None:
+     with open(PLAYER_FILE, 'w', newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=["name", "score"])
+        writer.writeheader()
+        writer.writerows(players)
 
 
-def savenames(name: str) -> None:
-     with open(NAME_FILE, 'a') as f:
-          f.write(name.strip()+ "\n")
+def getplayer() -> list[str]:
+    return [p["name"].lower() for p in loadplayers()]
+ 
+ 
+def save_score(name: str, score: int) -> None:
+    players = loadplayers()
+    for p in players:
+        if p["name"].lower() == name.lower():
+            # if score > p["score"]:
+                p["score"] = score
+                saveplayers(players)
+                return
+
 
 
 def validate_save(name_text: str) -> str:
@@ -46,11 +64,15 @@ def validate_save(name_text: str) -> str:
 
         return "Letters only please!"
     
-    if name.lower() in loadnames():
+    if name.lower() in getplayer():
 
         return "Name already taken!"
     
-    savenames(name)
+
+
+    players = loadplayers()
+    players.append({"name": name, "score": 0})
+    saveplayers(players)
     settings.player_name = name
     return ""
 
