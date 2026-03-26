@@ -35,7 +35,7 @@ class Spaceship(pygame.sprite.Sprite):
  
     def update(self):
         speed = 3
-        cooldown = 250
+        cooldown = 500
         game_over= 0
 
         key= pygame.key.get_pressed()
