@@ -191,6 +191,7 @@ def rungame() -> None:
 
     settings.game_over = 0
     settings.countdown = 3
+    settings.score=0
     settings.last_count = pygame.time.get_ticks()
     settings.last_alien_shot = pygame.time.get_ticks()
 
@@ -202,6 +203,18 @@ def rungame() -> None:
     restart_btn = MenuButton(int(settings.screen_width / 2), 
                              int(settings.screen_height / 2 + 120),
                              200, 50, "RESTART", enabled=True)
+    
+
+
+
+    def clear_save():
+        if settings.player_name:
+            save_score(settings.player_name, settings.score)  # save to CSV
+        spaceship_group.empty()
+        bullet_group.empty()
+        alien_group.empty()
+        alien_bullet_group.empty()
+        explosion_group.empty()
     
     run= True
 
@@ -280,6 +293,9 @@ def rungame() -> None:
         alien_group.draw(settings.screen)
         alien_bullet_group.draw(settings.screen)
         explosion_group.draw(settings.screen)
+        
+
+        draw_text(f'Score: {settings.score}', settings.font30, settings.white, 10, 10)
 
         quit_btn.draw(settings.screen)
 
