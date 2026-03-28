@@ -26,7 +26,7 @@
 settings.py — Global config module; holds all constants, shared assets, and mutable game state (score, countdown, player_name)
 <br>
 
-entities.py — Actor module; defines all sprite classes (Spaceship, Aliens, Bullets, Alien_Bullets, Explosion, MenuButton) and all sprite groups
+entities.py — Actor module; defines all sprite classes (Spaceship, Aliens, Bullets, Alien_Bullets, Explosion, MenuButton, Shield, heart) and all sprite groups
 <br>
 
 game.py — Game manager; handles all screens (menu, name registration, game loop, leaderboard) and all CSV-based player persistence
