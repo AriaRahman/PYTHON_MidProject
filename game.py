@@ -48,7 +48,8 @@ def save_score(name: str, score: int) -> None:
     players = loadplayers()
     for p in players:
         if p["name"].lower() == name.lower():
-            p["score"] = score
+            if p["score"] > score:
+                p["score"] = score
             saveplayers(players)
             return
 
@@ -65,13 +66,13 @@ def validate_save(name_text: str) -> str:
 
         return "Letters only please!"
     
-    if name.lower() in getplayer():
-
-        return "Name already taken!"
-    
-
 
     players = loadplayers()
+    for p in players:
+        if p["name"].lower() == name.lower():
+            settings.player_name = p["name"]
+            return ""
+        
     players.append({"name": name, "score": 0})
     saveplayers(players)
     settings.player_name = name
