@@ -17,6 +17,9 @@ from entities import (
     explosion_group,
     create_aliens,
     create_spaceship,
+    heart_group,
+    shield_group,
+    Shield
 )
 
 PLAYER_FILE = "Players.csv"
@@ -48,7 +51,8 @@ def save_score(name: str, score: int) -> None:
     players = loadplayers()
     for p in players:
         if p["name"].lower() == name.lower():
-            p["score"] = score
+            if score > p["score"]:
+                p["score"] = score
             saveplayers(players)
             return
 
@@ -65,24 +69,58 @@ def validate_save(name_text: str) -> str:
 
         return "Letters only please!"
     
-    if name.lower() in getplayer():
-
-        return "Name already taken!"
-    
-
 
     players = loadplayers()
+    for p in players:
+        if p["name"].lower() == name.lower():
+            settings.player_name = p["name"]
+            return ""
+        
     players.append({"name": name, "score": 0})
     saveplayers(players)
     settings.player_name = name
     return ""
+
+def get_score(player):
+    return player["score"]
+
+def get_highscores() -> list[dict]:
+    players = loadplayers()
+    players.sort(key=get_score, reverse=True)
+    return players[:5]
+
+
+def show_highscores() -> None:
+    while True:
+        settings.clock.tick(settings.fps)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                return
+
+        draw_bg()
+        draw_text("HIGH SCORES", settings.font40, settings.green, cx - 120, cy - 200)
+
+        scores = get_highscores()
+        for i, player in enumerate(scores):
+            score_text = f"{i + 1}. {player['name']} - {player['score']}"
+            draw_text(score_text, settings.font30, settings.white, cx - 150, cy - 100 + i * 50)
+            draw_text("Press ESC to go back", settings.font30, settings.green, cx - 160, cy + 230)
+        pygame.display.update()
+
+def get_highest_score() -> int:
+    players = loadplayers()
+    if not players:
+        return 0
+    return max(player["score"] for player in players)
 
 
 def run_menu() -> bool:
 
 
     btn_start  = MenuButton(cx, cy,300, 50, "START GAME", enabled=True)
-    btn_scores = MenuButton(cx, cy + 80, 300, 50, "HIGH SCORES",enabled=False)
+    btn_scores = MenuButton(cx, cy + 80, 300, 50, "LEADERBOARD",enabled=True)
  
     buttons = [btn_start, btn_scores]
  
@@ -96,6 +134,8 @@ def run_menu() -> bool:
                 if btn.handle_event(event):
                     if btn is btn_start:
                         return True
+                    if btn is btn_scores:
+                        show_highscores()
  
         draw_bg()
  
@@ -160,6 +200,13 @@ def show_instructions() -> bool:
 
         enter_btn.draw(settings.screen)
 
+        if name_txt.strip():
+            players = loadplayers()
+            for p in players:
+                if p["name"].lower() == name_txt.strip().lower():
+                    draw_text(f"Best Score: {p['score']}", settings.font30, settings.green, cx - 90, cy + 50)
+                    break
+
         if error_txt:
              err = settings.font30.render(error_txt,True, settings.errcolor)
              settings.screen.blit(err,err.get_rect(centerx = cx , centery = cy +55))
@@ -188,6 +235,7 @@ def show_instructions() -> bool:
 def rungame() -> None:
     create_aliens()
     spaceship= create_spaceship()
+    highest_score = get_highest_score()
 
     settings.game_over = 0
     settings.countdown = 3
@@ -215,56 +263,67 @@ def rungame() -> None:
         alien_group.empty()
         alien_bullet_group.empty()
         explosion_group.empty()
+        heart_group.empty()
+        shield_group.empty()
+        settings.kill_streak = 0
+        settings.shield_active = False
     
-    run= True
 
-    while run:
+    while True:
         settings.clock.tick(settings.fps)
         settings.time_now = pygame.time.get_ticks()
+
+        if settings.score > highest_score:
+            highest_score = settings.score
+
+        if settings.shield_active  and len(shield_group) == 0:
+            shield_group.add(Shield())
 
         draw_bg()
   
         if settings.countdown == 0 : 
+            if settings.shield_active:
+                if settings.time_now - settings.shield_start_time> settings.shield_duration:
+                    settings.shield_active = False
+                    shield_group.empty()
+                    settings.kill_streak = 0
 
-   
-             if settings.time_now - settings.last_alien_shot > settings.alien_cooldown and len(alien_bullet_group) < 15 and len(alien_group) > 0 :
-        
-                attacking_alien = random.choice (alien_group.sprites())
-                alien_bullet = Alien_Bullets (attacking_alien.rect.centerx, 
-                                         attacking_alien.rect.bottom)
-            
-                alien_bullet_group.add(alien_bullet)
+            if (settings.time_now - settings.last_alien_shot > settings.alien_cooldown
+                    and len(alien_bullet_group) < 10
+                    and len(alien_group) > 0):
+                attacking_alien = random.choice(alien_group.sprites())
+                alien_bullet_group.add(
+                    Alien_Bullets(attacking_alien.rect.centerx,
+                                  attacking_alien.rect.bottom))
                 settings.last_alien_shot = settings.time_now
 
-         
-             if len(alien_group)==0:
-               settings.game_over=1
+            if len(alien_group)==0:
+                settings.game_over=1
       
-             if settings.game_over == 0 :
-                 
+            if settings.game_over == 0 :
                 if len(spaceship_group) > 0: 
                     settings.game_over =  spaceship.update() 
-
                 bullet_group.update()
                 alien_group.update()
                 alien_bullet_group.update()
+                heart_group.update()
+                shield_group.update()
     
-             else:
-                  if settings.game_over == -1:
-                      draw_text('GAME OVER!', settings.font40, settings.white, 
+            else:
+                if settings.game_over == -1:
+                    draw_text('GAME OVER!', settings.font40, settings.white, 
                             int(settings.screen_width/2 - 100),
                             int(settings.screen_height/2 + 50))
                 
-                  if settings.game_over == 1 :
-                          draw_text('YOU WIN', settings.font40, settings.white, 
+                if settings.game_over == 1 :
+                    draw_text('YOU WIN', settings.font40, settings.white, 
                             int(settings.screen_width/2 - 100),
                             int(settings.screen_height/2 + 50))
                   
-                  restart_btn.draw(settings.screen) 
+                restart_btn.draw(settings.screen) 
 
     
           
-
         if settings.countdown> 0:
 
              draw_text('GET READY!!!', settings.font40,settings.white,
@@ -273,7 +332,7 @@ def rungame() -> None:
           
              draw_text(str(settings.countdown), settings.font40, settings.white,
                    int(settings.screen_width/2 - 10),
-                     int(settings.screen_height/2 + 100))
+                   int(settings.screen_height/2 + 100))
         
              count_timer = pygame.time.get_ticks()
 
@@ -285,43 +344,31 @@ def rungame() -> None:
     
         explosion_group.update()
 
-
-
-
         spaceship_group.draw(settings.screen)
         bullet_group.draw(settings.screen)
         alien_group.draw(settings.screen)
         alien_bullet_group.draw(settings.screen)
         explosion_group.draw(settings.screen)
+        heart_group.draw(settings.screen)
+        shield_group.draw(settings.screen)
         
 
-        draw_text(f'Score: {settings.score}', settings.font30, settings.white, 10, 10)
-
+        draw_text(f'Score: {settings.score}', settings.font30, settings.green, 10, 10)
+        draw_text(f'Highest Score: {get_highest_score()}', settings.font30, settings.white, 150, 10)
         quit_btn.draw(settings.screen)
 
 
         for event in pygame.event.get():
            if event.type == pygame.QUIT:
+                 clear_save()
                  return False
             
            if quit_btn.handle_event(event):
                 clear_save()
-                spaceship_group.empty()
-                bullet_group.empty()
-                alien_group.empty()
-                alien_bullet_group.empty()
-                explosion_group.empty()
                 return False
            
            if settings.game_over != 0 and restart_btn.handle_event(event):
-                
-
                 clear_save()
-                spaceship_group.empty()
-                bullet_group.empty()
-                alien_group.empty()
-                alien_bullet_group.empty()
-                explosion_group.empty()
                 return True   
            
 

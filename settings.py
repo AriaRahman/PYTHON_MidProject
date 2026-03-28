@@ -78,7 +78,10 @@ spaceship_img = pygame.transform.scale(
 invader_bullet= pygame.transform.scale(
     load_clean_image("images/invaderbullet.png"), (20,20))
 
-
+shield_active = False
+shield_start_time = 0
+kill_streak = 0
+shield_duration = 3000
 
 alien_cooldown = 150 
 countdown= 3
@@ -89,3 +92,4 @@ last_alien_shot = pygame.time.get_ticks()
 time_now = pygame.time.get_ticks()
 
 player_name = ""
+
