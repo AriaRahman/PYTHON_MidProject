@@ -77,12 +77,41 @@ def validate_save(name_text: str) -> str:
     settings.player_name = name
     return ""
 
+def get_score(player):
+    return player["score"]
+
+def get_highscores() -> list[dict]:
+    players = loadplayers()
+    players.sort(key=get_score, reverse=True)
+    return players[:5]
+
+
+def show_highscores() -> None:
+    while True:
+        settings.clock.tick(settings.fps)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                return
+
+        draw_bg()
+        draw_text("HIGH SCORES", settings.font40, settings.green, cx - 120, cy - 200)
+
+        scores = get_highscores()
+        for i, player in enumerate(scores):
+            score_text = f"{i + 1}. {player['name']} - {player['score']}"
+            draw_text(score_text, settings.font30, settings.white, cx - 150, cy - 100 + i * 50)
+            draw_text("Press ESC to go back", settings.font30, settings.green, cx - 160, cy + 230)
+        pygame.display.update()
+
+
 
 def run_menu() -> bool:
 
 
     btn_start  = MenuButton(cx, cy,300, 50, "START GAME", enabled=True)
-    btn_scores = MenuButton(cx, cy + 80, 300, 50, "HIGH SCORES",enabled=False)
+    btn_scores = MenuButton(cx, cy + 80, 300, 50, "LEADERBOARD",enabled=True)
  
     buttons = [btn_start, btn_scores]
  
@@ -96,6 +125,8 @@ def run_menu() -> bool:
                 if btn.handle_event(event):
                     if btn is btn_start:
                         return True
+                    if btn is btn_scores:
+                        show_highscores()
  
         draw_bg()
  
