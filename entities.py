@@ -8,6 +8,7 @@ Defines all game objects as Pygame sprites:
 - Explosion  : animated sprite-sheet effect
 - MenuButton : reusable UI button
 - Heart      : increases player-controlled ship's health 
+- Shield     : temporary invincibility
 
 """
 
@@ -49,8 +50,11 @@ class Spaceship(pygame.sprite.Sprite):
 
         if key[pygame.K_SPACE] and settings.time_now - self.last_shot > cooldown:
             settings.laser_fx.play()
-            bullet = Bullets(self.rect.centerx , self.rect.top)
-            bullet_group.add(bullet)
+            if settings.shield_active:
+                bullet_group.add(Bullets(self.rect.centerx - 15, self.rect.top))
+                bullet_group.add(Bullets(self.rect.centerx + 15, self.rect.top))
+            else:
+                bullet_group.add(Bullets(self.rect.centerx, self.rect.top))
             self.last_shot= settings.time_now
 
         
@@ -98,14 +102,20 @@ class Bullets(pygame.sprite.Sprite):
         hits = pygame.sprite.spritecollide(self, alien_group, False)
         if hits:
              #self.kill()
-        
              alien = hits[0] 
              alien.health -= 1
              self.kill()
+
              if alien.health <= 0:
-                  
                   alien.kill()
+                  settings.kill_streak += 1
                   settings.score += 10
+
+                  if settings.kill_streak >= 2 and not settings.shield_active:
+                    settings.shield_active = True
+                    settings.shield_start_time = settings.time_now
+                    settings.kill_streak = 0
+                  
                   settings.explosion_fx.play()
                   explosion = Explosion(self.rect.centerx, self.rect.centery, 2)
                   explosion_group.add(explosion)
@@ -113,6 +123,8 @@ class Bullets(pygame.sprite.Sprite):
                   if settings.score % 30 == 0:
                       heart = Heart(alien.rect.centerx, alien.rect.centery)
                       heart_group.add(heart)
+
+
 
 
              else:
@@ -170,7 +182,12 @@ class Alien_Bullets(pygame.sprite.Sprite):
            
             self.kill()
             settings.explosion2_fx.play()
-            spaceship.health_remaining -= 1
+            if settings.shield_active:
+                settings.shield_active = False
+                shield_group.empty()
+            else:
+                spaceship.health_remaining -= 1
+                settings.kill_streak = 0
             explosion= Explosion (self.rect.centerx, self.rect.centery, 1)
             explosion_group.add(explosion)
 
@@ -266,7 +283,16 @@ class Heart(pygame.sprite.Sprite):
                 spaceship.health_remaining = min(spaceship.health_remaining + 1, spaceship.health_start)
 
 
+class Shield(pygame.sprite.Sprite):
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.transform.scale(load_clean_image("images/shield.png"), (spaceship.rect.width + 20, spaceship.rect.height + 20))
+        self.rect = self.image.get_rect()
+        self.rect.center = spaceship.rect.center
 
+    def update(self):
+        if spaceship:
+            self.rect.center = spaceship.rect.center
 
 
 spaceship_group = pygame.sprite.Group()
@@ -275,6 +301,7 @@ alien_group = pygame.sprite.Group()
 alien_bullet_group = pygame.sprite.Group()
 explosion_group= pygame.sprite.Group()
 heart_group = pygame.sprite.Group()
+shield_group = pygame.sprite.Group()
 
 
 total_width = (settings.columns - 1) * 130  

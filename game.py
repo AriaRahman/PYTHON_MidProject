@@ -17,7 +17,9 @@ from entities import (
     explosion_group,
     create_aliens,
     create_spaceship,
-    heart_group
+    heart_group,
+    shield_group,
+    Shield
 )
 
 PLAYER_FILE = "Players.csv"
@@ -263,7 +265,9 @@ def rungame() -> None:
         alien_bullet_group.empty()
         explosion_group.empty()
         heart_group.empty()
+        shield_group.empty()
         settings.kill_streak = 0
+        settings.shield_active = False
     
 
     while True:
@@ -273,50 +277,54 @@ def rungame() -> None:
         if settings.score > highest_score:
             highest_score = settings.score
 
+        if settings.shield_active  and len(shield_group) == 0:
+            shield_group.add(Shield())
+
         draw_bg()
   
         if settings.countdown == 0 : 
+            if settings.shield_active:
+                if settings.time_now - settings.shield_start_time> settings.shield_duration:
+                    settings.shield_active = False
+                    shield_group.empty()
+                    settings.kill_streak = 0
 
-   
-             if settings.time_now - settings.last_alien_shot > settings.alien_cooldown and len(alien_bullet_group) < 15 and len(alien_group) > 0 :
-        
-                attacking_alien = random.choice (alien_group.sprites())
-                alien_bullet = Alien_Bullets (attacking_alien.rect.centerx, 
-                                         attacking_alien.rect.bottom)
-            
-                alien_bullet_group.add(alien_bullet)
+            if (settings.time_now - settings.last_alien_shot > settings.alien_cooldown
+                    and len(alien_bullet_group) < 10
+                    and len(alien_group) > 0):
+                attacking_alien = random.choice(alien_group.sprites())
+                alien_bullet_group.add(
+                    Alien_Bullets(attacking_alien.rect.centerx,
+                                  attacking_alien.rect.bottom))
                 settings.last_alien_shot = settings.time_now
 
-         
-             if len(alien_group)==0:
-               settings.game_over=1
+            if len(alien_group)==0:
+                settings.game_over=1
       
-             if settings.game_over == 0 :
-                 
+            if settings.game_over == 0 :
                 if len(spaceship_group) > 0: 
                     settings.game_over =  spaceship.update() 
-
                 bullet_group.update()
                 alien_group.update()
                 alien_bullet_group.update()
                 heart_group.update()
+                shield_group.update()
     
-             else:
-                  if settings.game_over == -1:
-                      draw_text('GAME OVER!', settings.font40, settings.white, 
+            else:
+                if settings.game_over == -1:
+                    draw_text('GAME OVER!', settings.font40, settings.white, 
                             int(settings.screen_width/2 - 100),
                             int(settings.screen_height/2 + 50))
                 
-                  if settings.game_over == 1 :
-                          draw_text('YOU WIN', settings.font40, settings.white, 
+                if settings.game_over == 1 :
+                    draw_text('YOU WIN', settings.font40, settings.white, 
                             int(settings.screen_width/2 - 100),
                             int(settings.screen_height/2 + 50))
                   
-                  restart_btn.draw(settings.screen) 
+                restart_btn.draw(settings.screen) 
 
     
           
-
         if settings.countdown> 0:
 
              draw_text('GET READY!!!', settings.font40,settings.white,
@@ -325,7 +333,7 @@ def rungame() -> None:
           
              draw_text(str(settings.countdown), settings.font40, settings.white,
                    int(settings.screen_width/2 - 10),
-                     int(settings.screen_height/2 + 100))
+                   int(settings.screen_height/2 + 100))
         
              count_timer = pygame.time.get_ticks()
 
@@ -337,14 +345,13 @@ def rungame() -> None:
     
         explosion_group.update()
 
-
-
         spaceship_group.draw(settings.screen)
         bullet_group.draw(settings.screen)
         alien_group.draw(settings.screen)
         alien_bullet_group.draw(settings.screen)
         explosion_group.draw(settings.screen)
         heart_group.draw(settings.screen)
+        shield_group.draw(settings.screen)
         
 
         draw_text(f'Score: {settings.score}', settings.font30, settings.green, 10, 10)
