@@ -198,6 +198,13 @@ def show_instructions() -> bool:
 
         enter_btn.draw(settings.screen)
 
+        if name_txt.strip():
+            players = loadplayers()
+            for p in players:
+                if p["name"].lower() == name_txt.strip().lower():
+                    draw_text(f"Best Score: {p['score']}", settings.font30, settings.green, cx - 90, cy + 50)
+                    break
+
         if error_txt:
              err = settings.font30.render(error_txt,True, settings.errcolor)
              settings.screen.blit(err,err.get_rect(centerx = cx , centery = cy +55))
