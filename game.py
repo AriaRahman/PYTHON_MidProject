@@ -125,8 +125,7 @@ def show_instructions() -> bool:
             if event.type == pygame.QUIT:
                 return False
             
-        #     if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
-        #         return True
+     
             if event.type == pygame.KEYDOWN:
                  
                 if event.key == pygame.K_BACKSPACE:
@@ -210,7 +209,7 @@ def rungame() -> None:
 
     def clear_save():
         if settings.player_name:
-            save_score(settings.player_name, settings.score)  # save to CSV
+            save_score(settings.player_name, settings.score)  
         spaceship_group.empty()
         bullet_group.empty()
         alien_group.empty()

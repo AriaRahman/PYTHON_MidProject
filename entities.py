@@ -88,15 +88,10 @@ class Bullets(pygame.sprite.Sprite):
         self.rect.y -= 11
         if self.rect.bottom < 0:
             self.kill()
-        # if pygame.sprite.spritecollide(self, alien_group, True):
-        #     self.kill()
-        #     settings.score +=10
-        #     settings.explosion_fx.play()
-        #     explosion= Explosion (self.rect.centerx, self.rect.centery, 2)
-        #     explosion_group.add(explosion)
+       
         hits = pygame.sprite.spritecollide(self, alien_group, False)
         if hits:
-             #self.kill()
+            
         
              alien = hits[0] 
              alien.health -= 1
