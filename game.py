@@ -51,7 +51,7 @@ def save_score(name: str, score: int) -> None:
     players = loadplayers()
     for p in players:
         if p["name"].lower() == name.lower():
-            if p["score"] > score:
+            if score > p["score"]:
                 p["score"] = score
             saveplayers(players)
             return
