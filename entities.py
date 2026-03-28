@@ -4,9 +4,10 @@ Defines all game objects as Pygame sprites:
 - Spaceship  : player-controlled ship (movement, shooting, health)
 - Bullets    : player projectiles
 - Aliens     : shared formation movement)
-- Alien_Bullets : enemy projectiles
+- Alien_Bullets : enemy projectiles   
 - Explosion  : animated sprite-sheet effect
 - MenuButton : reusable UI button
+- Heart      : increases player-controlled ship's health 
 
 """
 
@@ -108,6 +109,12 @@ class Bullets(pygame.sprite.Sprite):
                   settings.explosion_fx.play()
                   explosion = Explosion(self.rect.centerx, self.rect.centery, 2)
                   explosion_group.add(explosion)
+
+                  if settings.score % 30 == 0:
+                      heart = Heart(alien.rect.centerx, alien.rect.centery)
+                      heart_group.add(heart)
+
+
              else:
          
                   alien.image.set_alpha(130)
@@ -241,6 +248,24 @@ class MenuButton:
         surf.blit(label_surf, label_surf.get_rect(center=self.rect.center))
 
 
+class Heart(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.transform.scale(load_clean_image("images/heart.png"), (30, 30))
+        self.rect = self.image.get_rect()
+        self.rect.center = (x, y)
+
+    def update(self):
+        self.rect.y += 3
+        if self.rect.top > settings.screen_height:
+            self.kill()
+        
+        if pygame.sprite.spritecollide(self, spaceship_group, False):
+            self.kill()
+            if spaceship:
+                spaceship.health_remaining = min(spaceship.health_remaining + 1, spaceship.health_start)
+
+
 
 
 
@@ -249,6 +274,7 @@ bullet_group= pygame.sprite.Group()
 alien_group = pygame.sprite.Group()
 alien_bullet_group = pygame.sprite.Group()
 explosion_group= pygame.sprite.Group()
+heart_group = pygame.sprite.Group()
 
 
 total_width = (settings.columns - 1) * 130  

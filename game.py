@@ -17,6 +17,7 @@ from entities import (
     explosion_group,
     create_aliens,
     create_spaceship,
+    heart_group
 )
 
 PLAYER_FILE = "Players.csv"
@@ -233,6 +234,7 @@ def show_instructions() -> bool:
 def rungame() -> None:
     create_aliens()
     spaceship= create_spaceship()
+    highest_score = get_highest_score()
 
     settings.game_over = 0
     settings.countdown = 3
@@ -260,12 +262,16 @@ def rungame() -> None:
         alien_group.empty()
         alien_bullet_group.empty()
         explosion_group.empty()
+        heart_group.empty()
+        settings.kill_streak = 0
     
-    run= True
 
-    while run:
+    while True:
         settings.clock.tick(settings.fps)
         settings.time_now = pygame.time.get_ticks()
+
+        if settings.score > highest_score:
+            highest_score = settings.score
 
         draw_bg()
   
@@ -293,6 +299,7 @@ def rungame() -> None:
                 bullet_group.update()
                 alien_group.update()
                 alien_bullet_group.update()
+                heart_group.update()
     
              else:
                   if settings.game_over == -1:
@@ -337,6 +344,7 @@ def rungame() -> None:
         alien_group.draw(settings.screen)
         alien_bullet_group.draw(settings.screen)
         explosion_group.draw(settings.screen)
+        heart_group.draw(settings.screen)
         
 
         draw_text(f'Score: {settings.score}', settings.font30, settings.green, 10, 10)
@@ -346,26 +354,15 @@ def rungame() -> None:
 
         for event in pygame.event.get():
            if event.type == pygame.QUIT:
+                 clear_save()
                  return False
             
            if quit_btn.handle_event(event):
                 clear_save()
-                spaceship_group.empty()
-                bullet_group.empty()
-                alien_group.empty()
-                alien_bullet_group.empty()
-                explosion_group.empty()
                 return False
            
            if settings.game_over != 0 and restart_btn.handle_event(event):
-                
-
                 clear_save()
-                spaceship_group.empty()
-                bullet_group.empty()
-                alien_group.empty()
-                alien_bullet_group.empty()
-                explosion_group.empty()
                 return True   
            
 
