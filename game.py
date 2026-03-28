@@ -105,6 +105,11 @@ def show_highscores() -> None:
             draw_text("Press ESC to go back", settings.font30, settings.green, cx - 160, cy + 230)
         pygame.display.update()
 
+def get_highest_score() -> int:
+    players = loadplayers()
+    if not players:
+        return 0
+    return max(player["score"] for player in players)
 
 
 def run_menu() -> bool:
@@ -319,7 +324,6 @@ def rungame() -> None:
 
 
 
-
         spaceship_group.draw(settings.screen)
         bullet_group.draw(settings.screen)
         alien_group.draw(settings.screen)
@@ -327,8 +331,8 @@ def rungame() -> None:
         explosion_group.draw(settings.screen)
         
 
-        draw_text(f'Score: {settings.score}', settings.font30, settings.white, 10, 10)
-
+        draw_text(f'Score: {settings.score}', settings.font30, settings.green, 10, 10)
+        draw_text(f'Highest Score: {get_highest_score()}', settings.font30, settings.white, 150, 10)
         quit_btn.draw(settings.screen)
 
 
