@@ -1,3 +1,12 @@
+"""
+Handles all game screens and logic for Space Shooter.
+
+Contains the main menu, leaderboard, player name entry,
+and the core game loop with scoring, power-ups, and CSV persistence.
+"""
+
+
+
 from __future__ import annotations
 
 import random
