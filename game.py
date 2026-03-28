@@ -95,7 +95,8 @@ def show_highscores() -> None:
         settings.clock.tick(settings.fps)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
+                return
+                #pygame.quit()
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 return
 
@@ -106,7 +107,8 @@ def show_highscores() -> None:
         for i, player in enumerate(scores):
             score_text = f"{i + 1}. {player['name']} - {player['score']}"
             draw_text(score_text, settings.font30, settings.white, cx - 150, cy - 100 + i * 50)
-            draw_text("Press ESC to go back", settings.font30, settings.green, cx - 160, cy + 230)
+       
+        draw_text("Press ESC to go back", settings.font30, settings.green, cx - 160, cy + 230)
         pygame.display.update()
 
 def get_highest_score() -> int:
